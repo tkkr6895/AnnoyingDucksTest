@@ -18,22 +18,28 @@ var map;
 
 function initialize() {
   var mapOptions = {
-    zoom: 6
+    zoom: 18
   };
   map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
 
   //HTML5 Geo-Location
+  var infowindow = null;
   if(navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      var pos = new google.maps.LatLng(position.coords.latitude,
+    navigator.geolocation.watchPosition(function(position) {
+      
+        var pos = new google.maps.LatLng(position.coords.latitude,
                                        position.coords.longitude);
-
-      var infowindow = new google.maps.InfoWindow({
+        if(infowindow){
+          infowindow.close();
+          infowindow = null;
+        }
+        infowindow = new google.maps.InfoWindow({
         map: map,
         position: pos,
         content: 'Your current location.'
       });
+
 
       map.setCenter(pos);
     }, function() {
